@@ -1,0 +1,80 @@
+vehicle-registration-investor-dashboard/
+│
+├── data/
+│   └── vehicle_registration_dashboard_ready.csv   # Sample dataset used
+│
+├── ui.py                                           # Streamlit dashboard code (full version)
+│
+├── README.md                                       # Documentation file
+│
+
+
+
+
+
+
+# Vehicle Registration Investor Dashboard
+
+## Overview
+This project is an interactive dashboard built in Streamlit that visualizes vehicle registration data from the Vahan public dataset with investor-centric KPIs and visuals. Users can explore vehicle registrations by category and manufacturer, analyze year-over-year (YoY) growth, and filter data by date ranges.
+
+## Setup Instructions
+
+### Prerequisites
+- Python 3.8 or newer
+- Recommended to use a virtual environment
+
+### Installation
+
+1. Clone the repo:
+git clone <your-repo-url>
+cd vehicle-registration-investor-dashboard
+
+text
+
+2. Create and activate a virtual environment:
+python -m venv venv
+source venv/bin/activate # On Linux/macOS
+venv\Scripts\activate # On Windows
+
+text
+
+3. Install dependencies:
+pip install streamlit pandas numpy altair matplotlib
+
+text
+
+### Running the Dashboard
+
+Run the Streamlit app using:
+streamlit run ui.py
+
+text
+
+Upload `data/vehicle_registration_dashboard_ready.csv` or your own CSV with compatible schema to begin.
+
+
+
+Data Assumptions
+
+- The dataset contains quarterly vehicle registrations with columns:
+  - `registration_date`: first day of each quarter (datetime)
+  - `period`: Quarter label, e.g., `2023-Q1`
+  - `manufacturer`: Vehicle manufacturer names
+  - `vehicle_category`: Vehicle class (e.g., Motor Car, Omni Bus)
+  - `count`: Number of vehicles registered
+- The data covers multiple years to allow YoY and QoQ growth analysis.
+- Totals represent the sum of 4WIC, LMV, MMV, and HMV categories implicitly.
+
+---
+
+## Feature Roadmap (if continued)
+
+- Add additional filters for vehicle type (2W, 3W, etc.) if data available.
+- Incorporate predictive analytics or AI-based forecasting for registration trends.
+- Enhance UI with more investor-centric insights like market share, region-wise trends.
+- Add export options for charts and KPIs in PDF or Excel.
+- Deploy the dashboard as a web service for remote stakeholder access.
+
+
+
