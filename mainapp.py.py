@@ -1,5 +1,3 @@
-
-import altair as alt
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -9,6 +7,7 @@ import matplotlib.pyplot as plt
 st.title("Vehicle Registration Investor Dashboard")
 
 uploaded_file = st.file_uploader("Upload your vehicle registration CSV file", type=["csv"])
+
 if uploaded_file:
     try:
         df = pd.read_csv(uploaded_file)
@@ -22,7 +21,7 @@ if uploaded_file:
             'TOTAL': 'count'
         }
         df.rename(columns=rename_map, inplace=True)
-        
+
         # Clean column names and values
         df.columns = df.columns.str.strip()
         for col in ['reg_date', 'period', 'vehicle_category', 'manufacturer']:
@@ -35,23 +34,23 @@ if uploaded_file:
             st.error(f"Missing required columns in uploaded file: {missing_cols}")
             st.stop()
 
-        # Convert types
+        # Convert types and drop invalid rows
         df['reg_date'] = pd.to_datetime(df['reg_date'], errors='coerce')
-        df = df.dropna(subset=['reg_date', 'vehicle_category', 'manufacturer', 'count']).copy()
         df['count'] = pd.to_numeric(df['count'], errors='coerce')
-        df = df.dropna(subset=['count'])
+        df = df.dropna(subset=['reg_date', 'vehicle_category', 'manufacturer', 'count']).copy()
 
+        # Date range selection
         min_date = df['reg_date'].min()
         max_date = df['reg_date'].max()
-
         date_range = st.date_input("Select Date Range", [min_date, max_date], min_value=min_date, max_value=max_date)
+
         if len(date_range) == 2:
             start_date, end_date = date_range
             df = df[(df['reg_date'] >= pd.to_datetime(start_date)) & (df['reg_date'] <= pd.to_datetime(end_date))]
 
+        # Filters
         vehicle_categories = sorted(df['vehicle_category'].unique())
         manufacturers = sorted(df['manufacturer'].unique())
-
         selected_vehicle_categories = st.multiselect("Select Vehicle Categories", vehicle_categories, default=vehicle_categories)
         selected_manufacturers = st.multiselect("Select Manufacturers", manufacturers, default=manufacturers)
 
@@ -118,6 +117,7 @@ if uploaded_file:
             st.subheader("Vehicle Registrations by Category (Latest Year)")
             latest_year_data = df_filtered[df_filtered['reg_date'].dt.year == latest_year]
             by_cat_latest = latest_year_data.groupby('vehicle_category')['count'].sum()
+
             fig, ax = plt.subplots()
             by_cat_latest.plot.pie(autopct='%1.1f%%', ax=ax, legend=False)
             ax.set_ylabel('')
@@ -140,7 +140,6 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Error processing file: {e}")
+
 else:
     st.info("Please upload a CSV file to begin.")
-
-
