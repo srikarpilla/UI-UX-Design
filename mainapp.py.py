@@ -1,3 +1,20 @@
+import subprocess
+import sys
+
+def install_package(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    install_package("matplotlib")
+    import matplotlib.pyplot as plt
+
+try:
+    import altair as alt
+except ImportError:
+    install_package("altair")
+import altair as alt
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -140,3 +157,4 @@ if uploaded_file:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Please upload a CSV file to begin.")
+
