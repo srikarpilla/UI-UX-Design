@@ -34,23 +34,23 @@ if uploaded_file:
             st.error(f"Missing required columns in uploaded file: {missing_cols}")
             st.stop()
 
-        # Convert types and drop invalid rows
+        # Convert types
         df['reg_date'] = pd.to_datetime(df['reg_date'], errors='coerce')
         df['count'] = pd.to_numeric(df['count'], errors='coerce')
         df = df.dropna(subset=['reg_date', 'vehicle_category', 'manufacturer', 'count']).copy()
 
-        # Date range selection
         min_date = df['reg_date'].min()
         max_date = df['reg_date'].max()
+
         date_range = st.date_input("Select Date Range", [min_date, max_date], min_value=min_date, max_value=max_date)
 
         if len(date_range) == 2:
             start_date, end_date = date_range
             df = df[(df['reg_date'] >= pd.to_datetime(start_date)) & (df['reg_date'] <= pd.to_datetime(end_date))]
 
-        # Filters
         vehicle_categories = sorted(df['vehicle_category'].unique())
         manufacturers = sorted(df['manufacturer'].unique())
+
         selected_vehicle_categories = st.multiselect("Select Vehicle Categories", vehicle_categories, default=vehicle_categories)
         selected_manufacturers = st.multiselect("Select Manufacturers", manufacturers, default=manufacturers)
 
